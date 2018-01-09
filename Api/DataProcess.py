@@ -1,5 +1,5 @@
 import json
-import MySQLdb
+# import MySQLdb
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -34,11 +34,13 @@ class DataProcess:
         for i in range(5):
             urlApi = baseUrl + services[i] + paramUrl
             dataFrames.append(pd.DataFrame.from_dict(pd.io.json.json_normalize(json.loads(requests.get(urlApi).text)['records']), orient='columns'))
+            print ("Querying for service " + str(i) )
         return dataFrames
 
     #Pour chaque service, on tâchera de répertorier dans un dictionnaire uniquement les villes contenant plus de 1 référence
     #La fonction prend en argument les dataFrames retournées par dataQuery() ainsi que l'index et le champ correspondant au service voulu
     def dataHandler(self, dataFrames, index, field):
+        print ("Handling data " + str(index) + " with field : " + field)
         townCountValues = dataFrames[index][field].value_counts()
         townCountDict = {}
         for key, townCountValue in townCountValues.items():
@@ -47,7 +49,7 @@ class DataProcess:
         return townCountDict
 
     #on stocke les résultats obtenus en base mysql
-    def dataInsert():
+    def dataInsert(self):
         conn = MySQLdb.connect(host= "localhost",
                                user="",
                                passwd="",
@@ -61,12 +63,15 @@ class DataProcess:
         conn.close()
 
     #on visualise le nombre d'occurence d'un service donné avec un diagramme à barre
-    def dataViz(townCountDict):
-        fig = plt.figure(figsize=(25,15))
-        plt.bar(list(townCountDict.keys()), townCountDict.values(), color='g')
-        plt.show()
+    # def dataViz(self, townCountDict):
+    #     fig = plt.figure(figsize=(25,15))
+    #     plt.bar(list(townCountDict.keys()), townCountDict.values(), color='g')
+    #     plt.show()
 
 #les appels
-#dataQuery()
+# dataQuery(self)
 #dataHandler(dataQuery(), 0, 'fields.commune')
 #dataViz(dataHandler(dataQuery(), 0, 'fields.commune'))
+process = DataProcess()
+#process.dataQuery()
+process.dataHandler(process.dataQuery(), 0, 'fields.commune')
