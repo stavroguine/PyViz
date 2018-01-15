@@ -1,5 +1,5 @@
 import json
-# import MySQLdb
+import MySQLdb
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -49,17 +49,17 @@ class DataProcess:
         return townCountDict
 
     #on stocke les résultats obtenus en base mysql
-    def dataInsert(self):
+    def dataInsert(self, townCountDict, db, table):
         conn = MySQLdb.connect(host= "localhost",
-                               user="",
-                               passwd="",
-                               db="")
+                               user="root",
+                               passwd="root",
+                               db=db)
         x = conn.cursor()
-        try:
-            x.execute("""INSERT INTO  VALUES""")
-            conn.commit()
-        except:
-            conn.rollback()
+
+        for key, townCountValue in townCountDict.items():
+            x.execute("""INSERT INTO postes(occurrence, commune) VALUES (%s, %s)""", (townCountValue, key))
+
+        conn.commit()
         conn.close()
 
     #on visualise le nombre d'occurence d'un service donné avec un diagramme à barre
@@ -74,4 +74,5 @@ class DataProcess:
 #dataViz(dataHandler(dataQuery(), 0, 'fields.commune'))
 process = DataProcess()
 #process.dataQuery()
-process.dataHandler(process.dataQuery(), 0, 'fields.commune')
+townCountDict = process.dataHandler(process.dataQuery(), 0, 'fields.commune')
+process.dataInsert(townCountDict, 'Pyviz', 'postes')
