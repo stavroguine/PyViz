@@ -1,5 +1,17 @@
 ;(function (d3) {
+
+
+    //request to api, return json
+    url = "http://192.168.0.19:1440/youplaboum"
+    function setData(jsondata) {
+        console.log(jsondata);
+    }
+
+    d3.json(url, setData);
+
+
     function update () {
+
         var data = d3.range(10).map(function (d, i) {
             return {v: Math.random()}
         })
