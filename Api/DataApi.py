@@ -9,7 +9,8 @@ app = Flask(__name__)
 api = Api(app)
 
 class DataApi(Resource):
-    #La methode get de l'api recupere chaque entree de la table choisie
+    #La methode get de l'api
+    # recupere chaque entree de la table choisie
     #retourne un fichier json
     def get(self):
         conn = engine.connect()
