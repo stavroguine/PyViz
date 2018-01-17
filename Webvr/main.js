@@ -1,23 +1,29 @@
 ;(function (d3) {
 
-
     //request to api, return json
-    url = "http://192.168.0.19:1440/youplaboum"
-    function setData(jsondata) {
-        console.log(jsondata);
-    }
-
-    d3.json(url, setData);
-
+    //  function setData(jsondata) {
+    //      console.log(jsondata);
+    //      console.log(jsondata['postes'].length);
+    //
+    //     return Object.keys(jsondata['postes']).length;
+    // }
+    // d3.json(url, setData);
 
     function update () {
+        var url = "http://192.168.0.19:1440/youplaboum"
 
+        $.ajax({
+            type: 'GET',
+            url: url,
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+            }
+        });
         var data = d3.range(10).map(function (d, i) {
             return {v: Math.random()}
         })
-
         console.log('update')
-
         // adding an entity as holder for each box
         var entities = d3.select('a-scene')
             .selectAll('a-entity')
@@ -40,12 +46,6 @@
             .attr('depth', 0.5)
             .attr('position', function (d, i) {
                 return '0 ' + d.v / 2 + ' -5'
-            })
-
-        // update height of each box
-        entities.select('a-box')
-            .attr('height', function (d, i) {
-                return d.v
             })
 
         newobj.append('a-text')
@@ -71,9 +71,9 @@
         })
     }
 
-    setInterval(update, 5000)
+   // setInterval(update, 3600)
 
-    update()
+    update();
 })(window.d3)
 
 //https://github.com/fabiofranchino/aframe-d3js-first-steps
